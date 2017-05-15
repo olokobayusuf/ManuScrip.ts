@@ -2,9 +2,11 @@
   "name": "manuscripts",
   "version": "1.0.0",
   "description": "ManuScripts is an academic journal manuscript management system for Dartmouth College CS61-SP17",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "start": "npm run build:live",
+    "build:live": "nodemon --exec ./node_modules/.bin/ts-node -- ./src/main.ts"
   },
   "repository": {
     "type": "git",
@@ -15,5 +17,14 @@
   "bugs": {
     "url": "https://github.com/olokobayusuf/ManuScrip.ts/issues"
   },
-  "homepage": "https://github.com/olokobayusuf/ManuScrip.ts#readme"
+  "homepage": "https://github.com/olokobayusuf/ManuScrip.ts#readme",
+  "devDependencies": {
+    "nodemon": "^1.11.0",
+    "ts-node": "^3.0.4"
+  },
+  "dependencies": {
+    "nodemon": "^1.11.0",
+    "ts-node": "^3.0.4"
+  },
+  "keywords": []
 }
