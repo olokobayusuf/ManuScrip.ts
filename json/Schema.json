@@ -1,0 +1,53 @@
+mongoose-auto-increment for Object IDs
+{
+	"user" : {
+		"role" : [
+			"author",
+			"editor",
+			"reviewer"
+		],
+		"password?" : 12,
+		"fname" : String,
+		"lname" : String,
+		"address": String,
+		"email" : String,
+		"affiliation" : String,
+		"interests" : []
+	},
+	"manuscript"  : {
+		"author" : ObjectId(0),
+		"RIcode" : ObjectId(0),
+		"title" : String,
+		"contributors" : [
+			{
+				"fname" : String,
+				"lname" : String
+			}
+		],
+		"status" : String,
+		"timestamp" : DateTime,
+		"pageCount" : Int,
+		"issue" : ObjectId(0)?,
+		"reviews" : [
+			ObjectID(...)
+		]
+	},
+	"review" : {
+		"reviewer" : ObjectID(...),
+		"dateSent" : DateTime,
+		"appropriateness" : Int,
+		"clarity" : Int,
+		"methodology" : Int,
+		"contribution" : Int,
+		"recommendation" : [
+			"accept",
+			"reject"
+		]
+	},
+	"issue" : {
+		"year" : Int,
+		"period" : Int,
+		"published" : boolean,
+		"publishDate" : DateTime,
+	}
+}
