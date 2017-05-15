@@ -19,10 +19,13 @@
   },
   "homepage": "https://github.com/olokobayusuf/ManuScrip.ts#readme",
   "devDependencies": {
+    "@types/mongodb": "^2.2.2",
+    "@types/mongoose": "^4.7.12",
     "nodemon": "^1.11.0",
     "ts-node": "^3.0.4"
   },
   "dependencies": {
+    "mongoose": "^4.9.9",
     "nodemon": "^1.11.0",
     "ts-node": "^3.0.4"
   },
