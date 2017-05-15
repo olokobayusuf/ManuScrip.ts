@@ -1,0 +1,19 @@
+{
+  "name": "manuscripts",
+  "version": "1.0.0",
+  "description": "ManuScripts is an academic journal manuscript management system for Dartmouth College CS61-SP17",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/olokobayusuf/ManuScrip.ts.git"
+  },
+  "author": "Yusuf Olokoba, Kevin Farmer",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/olokobayusuf/ManuScrip.ts/issues"
+  },
+  "homepage": "https://github.com/olokobayusuf/ManuScrip.ts#readme"
+}
