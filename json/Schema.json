@@ -33,6 +33,7 @@ mongoose-auto-increment for Object IDs
 		]
 	},
 	"review" : {
+		"manuscript" : ObjectID(...),
 		"reviewer" : ObjectID(...),
 		"dateSent" : DateTime,
 		"appropriateness" : Int,
