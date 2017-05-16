@@ -14,8 +14,7 @@ const ManuscriptSchema = new Schema({
   status: String,
   timestamp: { type : Date, default: Date.now },
   pageCount: Number,
-  issue: { type: Schema.Types.ObjectId, ref: 'Issue' },
-  reviews : [{ type: Schema.Types.ObjectId, ref: 'Review' }]
+  issue: { type: Schema.Types.ObjectId, ref: 'Issue' }
 });
 
 const ManuscriptModel = mongoose.model('Manuscript', ManuscriptSchema);
