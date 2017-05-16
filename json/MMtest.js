@@ -139,27 +139,27 @@ db.issue.insertMany([
     year: 2016,
     period: 1,
     published: true,
-    publishDate: Fri Mar 16 2015 19:05:17 GMT+0900 (EST) },
+    publishDate: "Fri Mar 16 2015 19:05:17 GMT+0900 (EST)" },
   {
     year: 2016,
     period: 2,
     published: true,
-    publishDate: Fri Jun 16 2015 19:05:17 GMT+0900 (EST) },
+    publishDate: "Fri Jun 16 2015 19:05:17 GMT+0900 (EST)" },
   {
     year: 2016,
     period: 3,
     published: true,
-    publishDate: Fri Sep 16 2015 19:05:17 GMT+0900 (EST) },
+    publishDate: "Fri Sep 16 2015 19:05:17 GMT+0900 (EST)" },
   {
     year: 2016,
     period: 4,
     published: true,
-    publishDate: Fri Dec 16 2015 19:05:17 GMT+0900 (EST) },
+    publishDate: "Fri Dec 16 2015 19:05:17 GMT+0900 (EST)" },
   {
     year: 2017,
     period: 1,
     published: true,
-    publishDate: Fri Dec 16 2015 19:05:17 GMT+0900 (EST) },
+    publishDate: "Fri Dec 16 2015 19:05:17 GMT+0900 (EST)" },
   {
     year: 2017,
     period: 2,
@@ -173,6 +173,7 @@ db.issue.insertMany([
 
 
 // TODO: Insert one manuscript of each state
+// Need to get object ids for ref first
 db.manuscript.insertMany([
   {
     author: { type: Schema.Types.ObjectId, ref: 'User' },
@@ -188,8 +189,18 @@ db.manuscript.insertMany([
 
 
 // TODO: Insert reviews for manuscripts
+// Need to get object ids for ref first
 db.review.insertMany([
-
+  {
+    manuscript: { type: Schema.Types.ObjectId, ref: 'Manuscript' },
+    reviewer: { type: Schema.Types.ObjectId, ref: 'User' },
+    dateSent: { type : Date, default: Date.now },
+    appropriateness: Number,
+    clarity: Number,
+    methodology: Number,
+    contribution: Number,
+    recommendation: Boolean
+  }
 ]);
 
 
