@@ -3,7 +3,7 @@ import mongoose, { Schema } from 'mongoose';
 
 const ManuscriptSchema = new Schema({
   author: { type: Schema.Types.ObjectId, ref: 'User' },
-  RIcode: String,
+  ricode: Number,
   title: String,
   contributors: [
     {

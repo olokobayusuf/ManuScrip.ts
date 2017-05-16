@@ -12,11 +12,11 @@ mongoose-auto-increment for Object IDs
 		"address": String,
 		"email" : String,
 		"affiliation" : String,
-		"interests" : []
+		"interests" : [Number]
 	},
 	"manuscript"  : {
 		"author" : ObjectId(0),
-		"RIcode" : ObjectId(0),
+		"RIcode" : Number,
 		"title" : String,
 		"contributors" : [
 			{
@@ -26,7 +26,7 @@ mongoose-auto-increment for Object IDs
 		],
 		"status" : String,
 		"timestamp" : DateTime,
-		"pageCount" : Int,
+		"pageCount" : Number,
 		"issue" : ObjectId(0)?,
 		"reviews" : [
 			ObjectID(...)
@@ -36,19 +36,23 @@ mongoose-auto-increment for Object IDs
 		"manuscript" : ObjectID(...),
 		"reviewer" : ObjectID(...),
 		"dateSent" : DateTime,
-		"appropriateness" : Int,
-		"clarity" : Int,
-		"methodology" : Int,
-		"contribution" : Int,
+		"appropriateness" : Number,
+		"clarity" : Number,
+		"methodology" : Number,
+		"contribution" : Number,
 		"recommendation" : [
 			"accept",
 			"reject"
 		]
 	},
 	"issue" : {
-		"year" : Int,
-		"period" : Int,
-		"published" : boolean,
+		"year" : Number,
+		"period" : Number,
+		"published" : Boolean,
 		"publishDate" : DateTime,
+	},
+	"ricode" : {
+		"id" : Number,
+		"subject" : String,
 	}
 }

@@ -9,7 +9,7 @@ const UserSchema = new Schema({
   address: String,
   email: String,
   affiliation: String,
-  interests: [String]
+  ricodes: [Number]
 });
 
 const UserModel = mongoose.model('User', UserSchema);
