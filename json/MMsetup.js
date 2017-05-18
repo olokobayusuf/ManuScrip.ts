@@ -1,5 +1,5 @@
 db = db.getSiblingDB('manuscripts'); // use manuscripts;
-db.user.insertMany([
+var myUsers = db.user.insertMany([
     {
         role: "author",
         password: "",
@@ -131,8 +131,8 @@ db.user.insertMany([
     },
 ]);
 
-// Create issues
-db.issue.insertMany([
+// Create myIssues
+var myIssues = db.issue.insertMany([
   {
     year: 2016,
     period: 1,
@@ -169,19 +169,76 @@ db.issue.insertMany([
 ]);
 
 
-/*
+
 // TODO: Insert one manuscript of each state
 // Need to get object ids for ref first
-db.manuscript.insertMany([
+// Authors are 0 - 3
+var myManuscripts = db.manuscript.insertMany([
   {
-    author: { type: Schema.Types.ObjectId, ref: 'User' },
-    ricode: Number,
-    title: String,
-    contributors: [{ fname: String, lname: String }],
-    status: String,
-    timestamp: { type : Date, default: Date.now },
-    pageCount: Number,
-    issue: { type: Schema.Types.ObjectId, ref: 'Issue' }
+    author: myUsers.insertedIds[0],
+    ricode: 1,
+    title: "title1",
+    contributors: [{ fname: "Kevin", lname: "Farmer" }],
+    status: "submitted",
+    timestamp: Date(),
+  },
+  {
+    author: myUsers.insertedIds[0],
+    ricode: 1,
+    title: "title2",
+    contributors: [{ fname: "Steve", lname: "Phillips" }, { fname: "Harvey", lname: "Dent" }],
+    status: "rejected",
+    timestamp: Date(),
+  },
+  {
+    author: myUsers.insertedIds[0],
+    ricode: 1,
+    title: "title3",
+    status: "underreview",
+    timestamp: Date(),
+  },
+  {
+    author: myUsers.insertedIds[0],
+    ricode: 2,
+    title: "title4",
+    status: "underreview",
+    timestamp: Date(),
+  },
+  {
+    author: myUsers.insertedIds[0],
+    ricode: 2,
+    title: "title5",
+    contributors: [{ fname: "Some", lname: "Guy" }],
+    status: "accepted",
+    timestamp: Date(),
+  },
+  {
+    author: myUsers.insertedIds[0],
+    ricode: 2,
+    title: "title6",
+    contributors: [{ fname: "John", lname: "Doe" }, { fname: "Jane", lname: "Doe" }, { fname: "Pizza", lname: "Doe" }],
+    status: "typeset",
+    timestamp: Date(),
+    pageCount: 12,
+  },
+  {
+    author: myUsers.insertedIds[0],
+    ricode: 3,
+    title: "title7",
+    status: "scheduled",
+    timestamp: Date(),
+    pageCount: 7,
+    issue: myIssues.insertedIds[6],
+  },
+  {
+    author: myUsers.insertedIds[0],
+    ricode: 3,
+    title: "title8",
+    contributors: [{ fname: "Kevin", lname: "Farmer" }],
+    status: "published",
+    timestamp: Date(),
+    pageCount: 9,
+    issue: myIssues.insertedIds[2]
   },
 ]);
 
@@ -190,17 +247,157 @@ db.manuscript.insertMany([
 // Need to get object ids for ref first
 db.review.insertMany([
   {
-    manuscript: { type: Schema.Types.ObjectId, ref: 'Manuscript' },
-    reviewer: { type: Schema.Types.ObjectId, ref: 'User' },
-    dateSent: { type : Date, default: Date.now },
-    appropriateness: Number,
-    clarity: Number,
-    methodology: Number,
-    contribution: Number,
-    recommendation: Boolean
-  }
+    manuscript: myManuscripts.insertedIds[2],
+    reviewer: myUsers.insertedIds[6],
+    dateSent: Date(),
+  },
+  {
+    manuscript: myManuscripts.insertedIds[3],
+    reviewer: myUsers.insertedIds[6],
+    dateSent: Date(),
+    appropriateness: 8,
+    clarity: 7,
+    methodology: 8,
+    contribution: 6,
+    recommendation: true,
+  },
+  {
+    manuscript: myManuscripts.insertedIds[3],
+    reviewer: myUsers.insertedIds[7],
+    dateSent: Date(),
+  },
+  {
+    manuscript: myManuscripts.insertedIds[3],
+    reviewer: myUsers.insertedIds[8],
+    dateSent: Date(),
+    appropriateness: 3,
+    clarity: 5,
+    methodology: 4,
+    contribution: 4,
+    recommendation: false,
+  },
+  {
+    manuscript: myManuscripts.insertedIds[4],
+    reviewer: myUsers.insertedIds[6],
+    dateSent: Date(),
+    appropriateness: 3,
+    clarity: 5,
+    methodology: 4,
+    contribution: 4,
+    recommendation: false,
+  },
+  {
+    manuscript: myManuscripts.insertedIds[4],
+    reviewer: myUsers.insertedIds[7],
+    dateSent: Date(),
+    appropriateness: 6,
+    clarity: 5,
+    methodology: 8,
+    contribution: 10,
+    recommendation: true,
+  },
+  {
+    manuscript: myManuscripts.insertedIds[4],
+    reviewer: myUsers.insertedIds[8],
+    dateSent: Date(),
+    appropriateness: 3,
+    clarity: 5,
+    methodology: 4,
+    contribution: 4,
+    recommendation: false,
+  },
+  {
+    manuscript: myManuscripts.insertedIds[5],
+    reviewer: myUsers.insertedIds[6],
+    dateSent: Date(),
+    appropriateness: 3,
+    clarity: 5,
+    methodology: 4,
+    contribution: 4,
+    recommendation: false,
+  },
+  {
+    manuscript: myManuscripts.insertedIds[5],
+    reviewer: myUsers.insertedIds[7],
+    dateSent: Date(),
+    appropriateness: 3,
+    clarity: 5,
+    methodology: 4,
+    contribution: 4,
+    recommendation: false,
+  },
+  {
+    manuscript: myManuscripts.insertedIds[5],
+    reviewer: myUsers.insertedIds[8],
+    dateSent: Date(),
+    appropriateness: 3,
+    clarity: 5,
+    methodology: 4,
+    contribution: 4,
+    recommendation: false,
+  },
+  {
+    manuscript: myManuscripts.insertedIds[6],
+    reviewer: myUsers.insertedIds[6],
+    dateSent: Date(),
+    appropriateness: 3,
+    clarity: 5,
+    methodology: 4,
+    contribution: 4,
+    recommendation: false,
+  },
+  {
+    manuscript: myManuscripts.insertedIds[6],
+    reviewer: myUsers.insertedIds[7],
+    dateSent: Date(),
+    appropriateness: 3,
+    clarity: 5,
+    methodology: 4,
+    contribution: 4,
+    recommendation: false,
+  },
+  {
+    manuscript: myManuscripts.insertedIds[6],
+    reviewer: myUsers.insertedIds[8],
+    dateSent: Date(),
+    appropriateness: 3,
+    clarity: 5,
+    methodology: 4,
+    contribution: 4,
+    recommendation: false,
+  },
+  {
+    manuscript: myManuscripts.insertedIds[7],
+    reviewer: myUsers.insertedIds[6],
+    dateSent: Date(),
+    appropriateness: 3,
+    clarity: 5,
+    methodology: 4,
+    contribution: 4,
+    recommendation: false,
+  },
+  {
+    manuscript: myManuscripts.insertedIds[7],
+    reviewer: myUsers.insertedIds[7],
+    dateSent: Date(),
+    appropriateness: 3,
+    clarity: 5,
+    methodology: 4,
+    contribution: 4,
+    recommendation: false,
+  },
+  {
+    manuscript: myManuscripts.insertedIds[7],
+    reviewer: myUsers.insertedIds[8],
+    dateSent: Date(),
+    appropriateness: 3,
+    clarity: 5,
+    methodology: 4,
+    contribution: 4,
+    recommendation: false,
+  },
 ]);
-*/
+
 
 // Insert RICodes. These can have unique assigned ids because
 // they are not being created by the user
