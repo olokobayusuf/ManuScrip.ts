@@ -1,3 +1,16 @@
+/*
+ * This file contains examples of the possible data which would appear in the
+ * manuscripts application, including users, manuscripts, issues, reviews and RIcodes.
+ *
+ * It is meant to be run in Terminal with: mongo MMsetup.js
+ *
+ * It contains multiple examples of each type of user, and at least one
+ * example of a manuscript in each possible status. If a manuscript is in
+ * a state such that it should have a corresponding review or issue, then
+ * those also appear in this file.
+ *
+ */
+
 db = db.getSiblingDB('manuscripts'); // use manuscripts;
 var myUsers = db.user.insertMany([
     {
@@ -181,6 +194,7 @@ var myManuscripts = db.manuscript.insertMany([
     contributors: [{ fname: "Kevin", lname: "Farmer" }],
     status: "submitted",
     timestamp: Date(),
+    sortNum: 1, // for internal purposes
   },
   {
     author: myUsers.insertedIds[0],
@@ -189,6 +203,7 @@ var myManuscripts = db.manuscript.insertMany([
     contributors: [{ fname: "Steve", lname: "Phillips" }, { fname: "Harvey", lname: "Dent" }],
     status: "rejected",
     timestamp: Date(),
+    sortNum: 3, // for internal purposes
   },
   {
     author: myUsers.insertedIds[0],
@@ -196,6 +211,7 @@ var myManuscripts = db.manuscript.insertMany([
     title: "title3",
     status: "underreview",
     timestamp: Date(),
+    sortNum: 2, // for internal purposes
   },
   {
     author: myUsers.insertedIds[0],
@@ -203,6 +219,7 @@ var myManuscripts = db.manuscript.insertMany([
     title: "title4",
     status: "underreview",
     timestamp: Date(),
+    sortNum: 2, // for internal purposes
   },
   {
     author: myUsers.insertedIds[0],
@@ -211,6 +228,7 @@ var myManuscripts = db.manuscript.insertMany([
     contributors: [{ fname: "Some", lname: "Guy" }],
     status: "accepted",
     timestamp: Date(),
+    sortNum: 4, // for internal purposes
   },
   {
     author: myUsers.insertedIds[0],
@@ -220,6 +238,7 @@ var myManuscripts = db.manuscript.insertMany([
     status: "typeset",
     timestamp: Date(),
     pageCount: 12,
+    sortNum: 5, // for internal purposes
   },
   {
     author: myUsers.insertedIds[0],
@@ -227,6 +246,7 @@ var myManuscripts = db.manuscript.insertMany([
     title: "title7",
     status: "scheduled",
     timestamp: Date(),
+    sortNum: 6, // for internal purposes
     pageCount: 7,
     issue: myIssues.insertedIds[6],
   },
@@ -236,6 +256,7 @@ var myManuscripts = db.manuscript.insertMany([
     title: "title8",
     contributors: [{ fname: "Kevin", lname: "Farmer" }],
     status: "published",
+    sortNum: 7, // for internal purposes
     timestamp: Date(),
     pageCount: 9,
     issue: myIssues.insertedIds[2]
