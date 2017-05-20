@@ -12,6 +12,12 @@
  *
  * Most error-checking, etc. will need to be done on the application level, as
  * MongoDB on it's own will allow use to insert "bogus" data.
+ *
+ *
+ * For the next part we'll have auto-incrementing IDs so that the user
+ * will be able to remember them, but we will be implementing that
+ * as part of the application.
+ *
  */
 
 
