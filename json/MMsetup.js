@@ -16,6 +16,7 @@
  */
 
 db = db.getSiblingDB('manuscripts'); // use manuscripts;
+print("Inserting users...");
 var myUsers = db.user.insertMany([
     {
         role: "author",
@@ -149,6 +150,7 @@ var myUsers = db.user.insertMany([
 ]);
 
 // Create myIssues
+print("Inserting issues...");
 var myIssues = db.issue.insertMany([
   {
     year: 2016,
@@ -186,10 +188,8 @@ var myIssues = db.issue.insertMany([
 ]);
 
 
-
-// TODO: Insert one manuscript of each state
-// Need to get object ids for ref first
-// Authors are 0 - 3
+// Creating new manuscripts
+print("Inserting manuscripts...");
 var myManuscripts = db.manuscript.insertMany([
   {
     author: myUsers.insertedIds[0],
@@ -267,9 +267,8 @@ var myManuscripts = db.manuscript.insertMany([
   },
 ]);
 
-
-// TODO: Insert reviews for manuscripts
-// Need to get object ids for ref first
+// Create reviews for manuscripts
+print("Inserting reviews...");
 db.review.insertMany([
   {
     manuscript: myManuscripts.insertedIds[2],
@@ -426,6 +425,7 @@ db.review.insertMany([
 
 // Insert RICodes. These can have unique assigned ids because
 // they are not being created by the user
+print("Inserting RIcodes...");
 db.ricode.insertMany([
   { id: 1, interest: "Agricultural engineering" },
   { id: 2, interest: "Biochemical engineering" },
@@ -552,3 +552,5 @@ db.ricode.insertMany([
   { id: 123, interest: "Web engineering" },
   { id: 124, interest: "Systems engineering" }
 ]);
+
+print("Finished!");
