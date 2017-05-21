@@ -254,6 +254,8 @@ printjson(review);
 
 
 // reject <manu#> <appropriateness> <clarity> <methodology> <contribution>
+// this manuscript has already been rejected, but this shows the query for how a reviewer
+// would give a "reject" review
 db.review.findOneAndUpdate({ manuscript: newManuscript3.insertedId, reviewer: reviewer.insertedId}, {
   $set: {
     appropriateness: 4,
