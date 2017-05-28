@@ -4,7 +4,7 @@
 */
 
 import { UserController } from "./User";
-import { IUser } from "../Models/User";
+import { IUser, User } from "../Models/User";
 
 export class Reviewer extends UserController {
 
@@ -39,13 +39,16 @@ export class Reviewer extends UserController {
         
     }
 
-    private resign () : boolean { // INCOMPLETE
+    private resign () : boolean {
         let resigned = this.resignRequested;
         if (!this.resignRequested) {
             console.log("Enter resign again to resign");
             this.resignRequested = true;
         } else {
-
+            User.findByIdAndRemove(this.user._id, (err, user) => {
+                if (err) console.error("Failed to resign:", err);
+                else if (user) console.log("Thank you for your services!");
+            });
         }
         return resigned;
     }

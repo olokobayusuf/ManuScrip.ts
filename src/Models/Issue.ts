@@ -10,7 +10,7 @@ import { db } from "../db"
 const IssueSchema : Schema = new Schema({
     year: Number,
     period: Number,
-    published: Boolean,
+    published: { type: Boolean, default: false },
     publishDate: Date
 });
 
@@ -18,8 +18,8 @@ const IssueSchema : Schema = new Schema({
 export class IIssue {
     year : number;
     period : number;
-    published : boolean;
-    publishedDate : Date;
+    published? : boolean;
+    publishedDate? : Date;
 }
 
 interface IIssueModel extends IIssue, Document {
