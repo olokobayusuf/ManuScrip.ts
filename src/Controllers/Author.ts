@@ -3,9 +3,12 @@
 *   CS 61 - 17S
 */
 
+import { sprintf } from "sprintf-js";
 import { UserController } from "./User";
 import { IUser } from "../Models/User";
 import { IManuscript, Manuscript } from "../Models/Manuscript";
+
+const statuses = ['submitted', 'underreview', 'rejected', 'accepted', 'typeset', 'scheduled', 'published'];
 
 export class Author extends UserController {
 
@@ -29,15 +32,16 @@ export class Author extends UserController {
         console.log(this.user._id);
     }
 
+
     protected status () : void {
       Manuscript.find({ author: this.user._id }).sort({ 'status': 1 })
       .then((result) => {
-        console.log("ID\t\t\t\tTitle\t\tRIcode\tStatus\t\tTimestamp");
+        console.log(sprintf("%-26s %-30s %-10s %-10s %-40s", "ID", "Title", "RIcode", "Status", "Timestamp"));
         // print results
         for (var key in result) {
           if (result.hasOwnProperty(key)) {
             var manu = result[key];
-            console.log(manu._id + "\t"+manu.title+"\t"+manu.ricode+"\t"+manu.status+"\t"+manu.timestamp);
+            console.log(sprintf("%-26s %-30s %-10s %-10s %-40s", manu._id, manu.title, manu.ricode, statuses[manu.status], manu.timestamp));
           }
         }
       })
