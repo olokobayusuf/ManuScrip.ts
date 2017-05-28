@@ -6,6 +6,7 @@
 import { UserController } from "./User";
 import { IUser } from "../Models/User";
 import { IManuscript, Manuscript } from "../Models/Manuscript";
+import { IIssue, Issue } from "../Models/Issue";
 
 export class Editor extends UserController {
 
@@ -55,29 +56,45 @@ export class Editor extends UserController {
     }
 
     private accept (manuscript : string) : void {
-        Manuscript.findByIdAndUpdate(manuscript, { status: "accepted", timestamp: new Date() }, (err, manuscript) => {
+        Manuscript.findByIdAndUpdate(manuscript, { status: 2, timestamp: new Date() }, (err, manuscript) => {
             if (err) console.error("Failed to accept manuscript:", err);
             else if (manuscript) console.log("Accepted manuscript:", manuscript.title);
         });
     }
 
     private reject (manuscript : string) : void {
-        Manuscript.findByIdAndUpdate(manuscript, { status: "rejected", timestamp: new Date() }, (err, manuscript) => {
+        Manuscript.findByIdAndUpdate(manuscript, { status: 3, timestamp: new Date() }, (err, manuscript) => {
             if (err) console.error("Failed to reject manuscript:", err);
             else if (manuscript) console.log("Rejected manuscript:", manuscript.title);
         });
     }
 
-    private typeset (manuscript : string, pages : number) : void {
-
+    private typeset (manuscript : string, pageCount : number) : void {
+        Manuscript.findByIdAndUpdate(manuscript, { status: 4, pageCount: pageCount, timestamp: new Date() }, (err, manuscript) => {
+            if (err) console.error("Failed to typeset manuscript:", err);
+            else if (manuscript) console.log("Typeset manuscript:", manuscript.title);
+        });
     }
 
     private issue (year : number, period : number) : void {
-
+        // Create the issue
+        let issue : IIssue = {
+            year: year,
+            period: period
+        };
+        // Send to db
+        new Issue(issue).save().then(issue => console.log("Created new issue:", issue._id));
     }
 
-    private schedule (manuscript : string, issue : string) : void {
-
+    private schedule (manuscript : string, issue : string) : void { // DEPLOY
+        Manuscript.findByIdAndUpdate(manuscript, {
+            status: 5,
+            timestamp: new Date(),
+            issue: issue
+        }, (err, manuscript) => {
+            if (err) console.error("Failed to schedule manuscript:", err);
+            else if (manuscript) console.log("Scheduled manuscript:", manuscript.title);
+        });
     }
 
     private publish (issue : string) : void {

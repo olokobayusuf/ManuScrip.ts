@@ -48,29 +48,24 @@ export class Author extends UserController {
 
     protected submit (args : string[]) : void { // DEPLOY
 
-        console.log(args);
-
         // Create the manuscript
         let manuscript : IManuscript = {
             author: this.user._id,
             title: args[1],
             ricode: +args[2],
-        }
-        console.log(args.length);
+            contributors: <[string]>[] // Really weird syntax :/
+        };
 
         // Add contributors
-        args.slice(3, args.length).forEach(contributor => manuscript.contributors.push({
-            fname: contributor.split(" ")[0],
-            lname: contributor.split(" ").length > 1 ? contributor.split(" ")[1] : ""
-        }));
+        args.slice(3, args.length).forEach(contributor => manuscript.contributors.push(contributor));
         // Submit
-        new Manuscript(manuscript).save().then(result => console.log("Submitted new manuscript:", result.title));
+        new Manuscript(manuscript).save().then(manuscript => console.log("Submitted new manuscript:", manuscript._id));
     }
 
     protected retract (args : string[]) : void { // DEPLOY
         // Retract
         Manuscript.remove({ _id: args[1], author: this.user._id }, err => {
-            if (err) console.error("Failed to remove manuscript. Make sure it is yours?");
+            if (err) console.error("Failed to remove manuscript. Make sure it is yours.");
             else console.log("Retracted manuscript:", args[1]);
         });
     }

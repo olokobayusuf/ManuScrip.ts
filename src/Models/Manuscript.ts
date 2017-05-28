@@ -11,34 +11,22 @@ const ManuscriptSchema : Schema = new Schema({
     author : { type: Schema.Types.ObjectId, ref: 'user' },
     ricode : Number,
     title : String,
-    contributors : [
-        {
-            fname: String,
-            lname: String
-        }
-    ],
-    status : { type: String, default: "submitted" },
+    contributors : [String],
+    status : { type: Number, default: 0 },
     timestamp : { type : Date, default: Date.now },
     pageCount : Number,
     issue : { type: Schema.Types.ObjectId, ref: 'issue' },
-    sortNum : Number,
 });
 
 export class IManuscript {
     author : Schema.Types.ObjectId;
     ricode : number;
     title : string;
-    contributors? : [
-        {
-            fname : string;
-            lname : string;
-        }
-    ];
-    status? : string;
+    contributors : [string];
+    status? : number; // ["submitted", "underreview", "accepted", "rejected", "typeset", "scheduled", "published"]
     timestamp? : Date;
     pageCount? : number;
     issue? : Schema.Types.ObjectId;
-    sortNum? : number;
 }
 
 interface IManuscriptModel extends IManuscript, Document {
