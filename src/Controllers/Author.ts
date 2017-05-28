@@ -28,7 +28,7 @@ export class Author extends UserController {
         console.log(`Welcome author ${this.user.fname} ${this.user.lname} from ${this.user.address}`);
     }
 
-    protected status () : void {
+    protected status () : void { // INCOMPLETE
 
     }
 

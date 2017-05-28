@@ -3,8 +3,10 @@
 *   CS 61 - 17S
 */
 
+import { Schema } from "mongoose";
 import { UserController } from "./User";
 import { IUser, User } from "../Models/User";
+import { IReview, Review } from "../Models/Review";
 
 export class Reviewer extends UserController {
 
@@ -31,15 +33,36 @@ export class Reviewer extends UserController {
         console.log(`Welcome reviewer ${this.user.fname} ${this.user.lname}`);
     }
 
-    protected status () : void {
+    protected status () : void { // INCOMPLETE
 
     }
 
-    private review (accepted : boolean, args : string[]) : void {
-        
+    private review (accepted : boolean, args : string[]) : void { // DEPLOY
+        // Arg checking
+        if (args.length != 6) {
+            console.error("Incorrect arguments for manuscript review");
+            return;
+        }
+        // Range checking
+        if (args.slice(2, args.length).some(score => +score < 1 || +score > 10)) {
+            console.error("Feedback scores must be within [1, 10]");
+            return;
+        }
+        // Create review
+        let review : IReview = {
+            manuscript: new Schema.Types.ObjectId(args[1]),
+            reviewer: this.user._id,
+            appropriateness : +args[2],
+            clarity : +args[3],
+            methodology : +args[4],
+            contribution : +args[5],
+            recommendation : accepted,
+        };
+        // Insert
+        new Review(review).save().then(review => console.log(`Submitted review ${review._id} for manuscript ${args[1]}`));
     }
 
-    private resign () : boolean {
+    private resign () : boolean { // DEPLOY
         let resigned = this.resignRequested;
         if (!this.resignRequested) {
             console.log("Enter resign again to resign");
