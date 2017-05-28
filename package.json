@@ -28,7 +28,8 @@
     "mongoose": "^4.9.9",
     "nodemon": "^1.11.0",
     "q": "^1.5.0",
-    "ts-node": "^3.0.4"
+    "ts-node": "^3.0.4",
+    "typescript": "^2.3.3"
   },
   "keywords": []
 }

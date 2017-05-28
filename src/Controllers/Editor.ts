@@ -34,7 +34,20 @@ export class Editor extends UserController {
     }
 
     protected status () : void {
-
+      Manuscript.find().sort({ 'status': 1 })
+      .then((result) => {
+        console.log("ID\t\t\t\tTitle\t\tRIcode\tStatus\t\tTimestamp");
+        // print results
+        for (var key in result) {
+          if (result.hasOwnProperty(key)) {
+            var manu = result[key];
+            console.log(manu._id + "\t"+manu.title+"\t"+manu.ricode+"\t"+manu.status+"\t"+manu.timestamp);
+          }
+        }
+      })
+      .catch((error) => {
+        console.error("Failed to get manuscripts:", error);
+      });
     }
 
     private assign (manuscript : string, reviewer : string) : void { // Might want these to be IManuscript and IUser

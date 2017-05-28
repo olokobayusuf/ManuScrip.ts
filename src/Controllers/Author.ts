@@ -26,19 +26,38 @@ export class Author extends UserController {
     protected welcome () : void {
         // Print
         console.log(`Welcome author ${this.user.fname} ${this.user.lname} from ${this.user.address}`);
+        console.log(this.user._id);
     }
 
     protected status () : void {
-
+      Manuscript.find({ author: this.user._id }).sort({ 'status': 1 })
+      .then((result) => {
+        console.log("ID\t\t\t\tTitle\t\tRIcode\tStatus\t\tTimestamp");
+        // print results
+        for (var key in result) {
+          if (result.hasOwnProperty(key)) {
+            var manu = result[key];
+            console.log(manu._id + "\t"+manu.title+"\t"+manu.ricode+"\t"+manu.status+"\t"+manu.timestamp);
+          }
+        }
+      })
+      .catch((error) => {
+        console.error("Failed to get manuscripts:", error);
+      });
     }
 
     protected submit (args : string[]) : void { // DEPLOY
+
+        console.log(args);
+
         // Create the manuscript
         let manuscript : IManuscript = {
             author: this.user._id,
             title: args[1],
-            ricode: +args[2]
+            ricode: +args[2],
         }
+        console.log(args.length);
+
         // Add contributors
         args.slice(3, args.length).forEach(contributor => manuscript.contributors.push({
             fname: contributor.split(" ")[0],
