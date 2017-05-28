@@ -8,8 +8,7 @@ import { db } from "../db"
 
 // Schema
 const UserSchema : Schema = new Schema({
-    role : String, // ["author","editor","reviewer"],
-    password : String,
+    role : String,
     fname : String,
     lname : String,
     address : String,
@@ -21,16 +20,15 @@ const UserSchema : Schema = new Schema({
 // Functional interface
 export class IUser {
     role : string;
-    password : string;
     fname : string;
     lname : string;
-    address : string;
-    email : string;
-    affiliation : string;
-    ricodes : [number]
+    address? : string;
+    email? : string;
+    affiliation? : string;
+    ricodes? : [number];
 }
 
-interface IUserModel extends IUser, Document {
+export interface IUserModel extends IUser, Document {
     // Custom methods go here
 }
 
