@@ -4,7 +4,10 @@
 */
 
 import { UserController } from "./User";
-import { IUser, User } from "../Models/User";
+import { IUser } from "../Models/User";
+import { IManuscript, Manuscript } from "../Models/Manuscript";
+import { IReview, Review } from "../Models/Review";
+
 
 export class Reviewer extends UserController {
 
@@ -32,23 +35,42 @@ export class Reviewer extends UserController {
     }
 
     protected status () : void {
+      // Find reviews associated with this reviewer
+      Review.find({ reviewer: this.user._id }).populate('manuscript').sort({ 'manuscript.status': 1 })
+      .then((result) => {
+        console.log("ID\t\t\t\tTitle\t\tRIcode\tStatus\t\tTimestamp");
+
+        for (var key in result) {
+          if (result.hasOwnProperty(key)) {
+            // Find the manuscript for each review
+            Manuscript.findOne({ _id: result[key].manuscript })
+            .then((manu : IManuscript) => {
+              console.log(manu._id + "\t"+manu.title+"\t"+manu.ricode+"\t"+manu.status+"\t"+manu.timestamp);
+            })
+            .catch((error) => {
+              console.error("Failed to get manuscripts:", error);
+            });
+
+          }
+        }
+      })
+      .catch((error) => {
+        console.error("Failed to get manuscripts:", error);
+      });
 
     }
 
     private review (accepted : boolean, args : string[]) : void {
-        
+
     }
 
-    private resign () : boolean {
+    private resign () : boolean { // INCOMPLETE
         let resigned = this.resignRequested;
         if (!this.resignRequested) {
             console.log("Enter resign again to resign");
             this.resignRequested = true;
         } else {
-            User.findByIdAndRemove(this.user._id, (err, user) => {
-                if (err) console.error("Failed to resign:", err);
-                else if (user) console.log("Thank you for your services!");
-            });
+
         }
         return resigned;
     }
