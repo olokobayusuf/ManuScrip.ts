@@ -7,15 +7,24 @@ import readline = require("readline");
 import { Auth } from "./Controllers/Auth";
 import { UserController } from "./Controllers/User";
 import { db } from "./db";
+import { RICode } from "./Models/RICode";
+
+const ricodes = require("../json/RICodes.json");
 
 class ManuScripts {
-    
+
+    private static loadData() : void {
+      RICode.collection.drop();
+      RICode.insertMany(ricodes);
+    }
+
     /**
      * Application Entry Point
      */
     public static main () : void {
         // Start REPL
         console.log("Welcome to ManuScripts");
+        this.loadData();
         console.log("Please authenticate yourself by registering or logging in:");
         let scanner : readline.ReadLine = readline.createInterface({
             input: process.stdin,
@@ -51,6 +60,7 @@ class ManuScripts {
             process.exit(0);
         });
     }
+
 }
 
 /**
