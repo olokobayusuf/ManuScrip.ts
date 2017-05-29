@@ -16,7 +16,7 @@ export class Editor extends UserController {
 
     //region --REPL--
 
-    protected evaluate (args : string[], logout : () => void) : void {
+    public evaluate (args : string[], logout : () => void) : void {
         if ((args[0] = args[0].toLowerCase()) == "status") this.status();
         else if (args[0] == "list") this.list(args);
         else if (args[0] == "assign") this.assign(args[1], args[2]);
@@ -39,7 +39,6 @@ export class Editor extends UserController {
         console.log(`Welcome editor ${this.user.fname} ${this.user.lname}`);
         console.log(`ID: ${this.user._id}`);
     }
-
 
     protected status () : void {
       Manuscript.find().sort({ 'status': 1 })

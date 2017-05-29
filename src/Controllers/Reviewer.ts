@@ -18,7 +18,7 @@ export class Reviewer extends UserController {
 
     //region --REPL--
 
-    protected evaluate (args : string[], logout : () => void) : void {
+    public evaluate (args : string[], logout : () => void) : void {
         // Evaluate
         if ((args[0] = args[0].toLowerCase()) == "status") this.status();
         else if (args[0] == "accept") this.review(true, args);
