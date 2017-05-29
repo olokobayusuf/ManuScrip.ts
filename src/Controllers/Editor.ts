@@ -9,7 +9,7 @@ import { IUser, User } from "../Models/User";
 import { IManuscript, Manuscript } from "../Models/Manuscript";
 import { IIssue, Issue } from "../Models/Issue";
 
-const statuses = ['submitted', 'underreview', 'rejected', 'accepted', 'typeset', 'scheduled', 'published'];
+const statuses = ['submitted', 'underreview', 'accepted', 'rejected', 'typeset', 'scheduled', 'published'];
 
 export class Editor extends UserController {
 
@@ -35,18 +35,19 @@ export class Editor extends UserController {
     protected welcome () : void {
         // Print
         console.log(`Welcome editor ${this.user.fname} ${this.user.lname}`);
+        console.log(`ID: ${this.user._id}`);
     }
 
 
     protected status () : void {
       Manuscript.find().sort({ 'status': 1 })
       .then((result) => {
-        console.log(sprintf("%-26s %-30s %-10s %-10s %-40s", "ID", "Title", "RIcode", "Status", "Timestamp"));
+        console.log(sprintf("%-26s %-30s %-10s %-15s %-40s", "ID", "Title", "RIcode", "Status", "Timestamp"));
         // print results
         for (var key in result) {
           if (result.hasOwnProperty(key)) {
             var manu = result[key];
-            console.log(sprintf("%-26s %-30s %-10s %-10s %-40s", manu._id, manu.title, manu.ricode, statuses[manu.status], manu.timestamp));
+            console.log(sprintf("%-26s %-30s %-10s %-15s %-40s", manu._id, manu.title, manu.ricode, statuses[manu.status], manu.timestamp));
           }
         }
       })

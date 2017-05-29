@@ -14,6 +14,11 @@ export class Auth {
     //region --Operations--
 
     public static register (tokens : string[], callback : (UserController) => void) : void {
+        if (tokens.length < 4) {
+          console.log("Cannot register a user without a role, first name, and last name");
+          return;
+        }
+
         // Get the user type
         let type : string = tokens[1].toLowerCase();
         // Check that it is valid
@@ -21,17 +26,36 @@ export class Auth {
             console.error("Cannot register because user type is invalid");
             return;
         }
+
+        if (type == "author" && tokens.length < 6) {
+          console.error("Did not provide sufficient info to register an author");
+          return;
+        }
+
+        if (type == "reviewer" && tokens.length < 5) {
+          console.error("Did not provide sufficient info to register an reviewer");
+          return;
+        }
+
         // Register the user type
         let user : IUser = {
             role: type,
             fname: tokens[2],
-            lname: tokens[3]
+            lname: tokens[3],
         };
         // Add user-specific attributes
         if (type == "author") {
             user.email = tokens[4];
             user.address = tokens[5];
-        } else if (type == "reviewer") for (let i = 4; i < tokens.length; i++) user.ricodes.push(+tokens[i]);
+        } else if (type == "reviewer") {
+          let ricodes: [number] = <[number]>[];
+          for (let i = 4; i < tokens.length; i++) {
+            let code : number = parseInt(tokens[i]);
+            console.log(code);
+            ricodes.push(code);
+          }
+          user.ricodes = ricodes;
+        }
         // Log
         console.log("Registering user:", user);
         // Register

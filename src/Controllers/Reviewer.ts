@@ -10,7 +10,7 @@ import { IUser } from "../Models/User";
 import { IManuscript, Manuscript } from "../Models/Manuscript";
 import { IReview, Review } from "../Models/Review";
 
-const statuses = ['submitted', 'underreview', 'rejected', 'accepted', 'typeset', 'scheduled', 'published'];
+const statuses = ['submitted', 'underreview', 'accepted', 'rejected', 'typeset', 'scheduled', 'published'];
 
 export class Reviewer extends UserController {
 
@@ -35,6 +35,7 @@ export class Reviewer extends UserController {
     protected welcome () : void {
         // Print
         console.log(`Welcome reviewer ${this.user.fname} ${this.user.lname}`);
+        console.log(`ID: ${this.user._id}`);
     }
 
 
@@ -42,13 +43,13 @@ export class Reviewer extends UserController {
       // Find reviews associated with this reviewer
       Review.find({ reviewer: this.user._id }).populate('manuscript').sort({ 'manuscript.status': 1 })
       .then((result) => {
-        console.log(sprintf("%-26s %-30s %-10s %-10s %-40s", "ID", "Title", "RIcode", "Status", "Timestamp"));
+        console.log(sprintf("%-26s %-30s %-10s %-15s %-40s", "ID", "Title", "RIcode", "Status", "Timestamp"));
         for (var key in result) {
           if (result.hasOwnProperty(key)) {
             // Find the manuscript for each review
             Manuscript.findOne({ _id: result[key].manuscript })
             .then((manu) => {
-              console.log(sprintf("%-26s %-30s %-10s %-10s %-40s", manu._id, manu.title, manu.ricode, statuses[manu.status], manu.timestamp));
+              console.log(sprintf("%-26s %-30s %-10s %-15s %-40s", manu._id, manu.title, manu.ricode, statuses[manu.status], manu.timestamp));
             })
             .catch((error) => {
               console.error("Failed to get manuscripts:", error);

@@ -24,15 +24,19 @@ export abstract class UserController {
             output: process.stdout,
             terminal: false
         }).on("line", input => {
-            // Tokenize
-            let args : string[] = input.match(/'[^']*'|[^ ]+/g).map(str => str.replace(/'/g,""));
-            // Evaluate
-            this.evaluate(args, () => {
-                // Quit scanner
-                scanner.close();
-                // Invoke logout callback
-                logout();
-            });
+            let args : string[];
+            if (input.length > 0) {
+              // Tokenize
+              args = input.match(/'[^']*'|[^ ]+/g).map(str => str.replace(/'/g,""));
+
+              // Evaluate
+              this.evaluate(args, () => {
+                  // Quit scanner
+                  scanner.close();
+                  // Invoke logout callback
+                  logout();
+              });
+            }
         });
     }
 
