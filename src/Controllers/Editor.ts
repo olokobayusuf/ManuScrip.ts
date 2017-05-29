@@ -17,6 +17,7 @@ export class Editor extends UserController {
 
     protected evaluate (args : string[], logout : () => void) : void {
         if ((args[0] = args[0].toLowerCase()) == "status") this.status();
+        else if (args[0] == "list") this.list(args);
         else if (args[0] == "assign") this.assign(args[1], args[2]);
         else if (args[0] == "accept") this.accept(args[1]);
         else if (args[0] == "reject") this.reject(args[1]);
@@ -56,11 +57,54 @@ export class Editor extends UserController {
       });
     }
 
-    private assign (manuscript : string, reviewer : string) : void { // DEPLOY
+    private list (args : string[]) : void {
+      if (args.length < 2) {
+        console.error("list takes arguments 'reviewers' or 'issues'");
+        return;
+      }
+      if (args[1] == "reviewers") {
+        User.find({ role: "reviewer" })
+        .then((result) => {
+          console.log(sprintf("%-26s %-15s %-15s %-15s", "ID", "Fname", "Lname", "RIcodes"));
+          // print results
+          for (var key in result) {
+            if (result.hasOwnProperty(key)) {
+              var reviewer = result[key];
+              console.log(sprintf("%-26s %-15s %-15s %-15s", reviewer._id, reviewer.fname, reviewer.lname, reviewer.ricodes.toString()));
+            }
+          }
+        })
+        .catch((error) => {
+          console.error("Failed to get issues:", error);
+        });
+      } else if (args[1] == "issues") {
+        Issue.find().sort({ 'year': 1, 'period' : 1 })
+        .then((result) => {
+          console.log(sprintf("%-26s %-10s %-10s %-40s", "ID", "Year", "Period", "Published"));
+          // print results
+          for (var key in result) {
+            if (result.hasOwnProperty(key)) {
+              var issue = result[key];
+              let pub = issue.published ? issue.publishedDate : "no";
+              console.log(sprintf("%-26s %-10s %-10s %-40s", issue._id, issue.year, issue.period, pub));
+            }
+          }
+        })
+        .catch((error) => {
+          console.error("Failed to get issues:", error);
+        });
+      } else {
+        console.error("list takes arguments 'reviewers' or 'issues'");
+        return;
+      }
+    }
+
+    private assign (manuscript : string, reviewer : string) : void {
         // Get the reviewer's RI codes
         User.findById(reviewer, (err, reviewer) => {
             // Error checking
             if (err) console.error("Failed to retrieve reviewer info:", err);
+            else if (reviewer == null) console.error("That reviewer does not exist");
             // Update manuscript
             else Manuscript.findOneAndUpdate({
                 _id: manuscript,
@@ -68,7 +112,8 @@ export class Editor extends UserController {
                 ricode: { $in: reviewer.ricodes }
             }, { status: 1, timestamp: new Date() }, (err, manuscript) => {
                 // Error checking
-                if (err) console.error("Failed to assign manuscript:", err);
+                if (err) console.error("Failed to assign manuscript, check given IDs");
+                else if (manuscript == null) console.error("Failed to assign manuscript, check manuscript status and RIcodes");
                 // Log
                 else console.log(`Assigned manuscript ${manuscript.title} to reviewer ${reviewer.fname} ${reviewer.lname}`);
             });
