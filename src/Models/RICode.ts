@@ -11,7 +11,7 @@ const RICodeSchema = new Schema({
 	interest: String,
 });
 
-export class IRICode {
+export interface IRICode {
 	id : number;
 	interest : string;
 }

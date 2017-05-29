@@ -17,7 +17,7 @@ const ReviewSchema : Schema = new Schema({
 	recommendation : Boolean
 });
 
-export class IReview {
+export interface IReview {
 	manuscript : Schema.Types.ObjectId;
 	reviewer : Schema.Types.ObjectId;
 	dateSent? : Date;

@@ -18,7 +18,7 @@ const UserSchema : Schema = new Schema({
 });
 
 // Functional interface
-export class IUser {
+export interface IUser {
     role : string;
     fname : string;
     lname : string;

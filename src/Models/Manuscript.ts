@@ -18,7 +18,7 @@ const ManuscriptSchema : Schema = new Schema({
     issue : { type: Schema.Types.ObjectId, ref: 'issue' },
 });
 
-export class IManuscript {
+export interface IManuscript {
     author : Schema.Types.ObjectId;
     ricode : number;
     title : string;

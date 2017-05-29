@@ -15,7 +15,7 @@ const IssueSchema : Schema = new Schema({
 });
 
 // Functional interface
-export class IIssue {
+export interface IIssue {
     year : number;
     period : number;
     published? : boolean;
