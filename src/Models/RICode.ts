@@ -7,7 +7,7 @@ import { Document, Model, Schema } from 'mongoose';
 import { db } from "../db"
 
 const RICodeSchema = new Schema({
-	id: Number,
+	id: { type: Number, index: true },
 	interest: String,
 });
 

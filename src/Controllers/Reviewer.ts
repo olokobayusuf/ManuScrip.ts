@@ -6,7 +6,7 @@
 import { sprintf } from "sprintf-js";
 import { Schema } from "mongoose";
 import { UserController } from "./User";
-import { IUser } from "../Models/User";
+import { IUser, User } from "../Models/User";
 import { IManuscript, Manuscript } from "../Models/Manuscript";
 import { IReview, Review } from "../Models/Review";
 
@@ -23,7 +23,7 @@ export class Reviewer extends UserController {
         if ((args[0] = args[0].toLowerCase()) == "status") this.status();
         else if (args[0] == "accept") this.review(true, args);
         else if (args[0] == "reject") this.review(false, args);
-        else if (args[0] == "resign") if (this.resign()) logout(); else ;
+        else if (args[0] == "resign") if (this.resign()) logout();
         else if (args[0] == "logout") logout();
         else console.error("Unrecognized command received. Try again");
     }
@@ -65,7 +65,7 @@ export class Reviewer extends UserController {
     }
 
 
-    private review (accepted : boolean, args : string[]) : void { // DEPLOY
+    private review (accepted : boolean, args : string[]) : void {
         // Arg checking
         if (args.length != 6) {
             console.error("Incorrect arguments for manuscript review");
@@ -76,27 +76,49 @@ export class Reviewer extends UserController {
             console.error("Feedback scores must be within [1, 10]");
             return;
         }
-        // Create review
-        let review : IReview = {
-            manuscript: new Schema.Types.ObjectId(args[1]),
-            reviewer: this.user._id,
-            appropriateness : +args[2],
-            clarity : +args[3],
-            methodology : +args[4],
-            contribution : +args[5],
-            recommendation : accepted,
-        };
-        // Insert
-        new Review(review).save().then(review => console.log(`Submitted review ${review._id} for manuscript ${args[1]}`));
+
+        Manuscript.findById(args[1])
+        .then((manu) => {
+          if (manu.status !== 1) {
+            console.error("Cannot review a manuscript which is not underreview");
+          } else {
+            Review.findOneAndUpdate({ manuscript: args[1], reviewer: this.user._id }, {
+              appropriateness : +args[2],
+              clarity : +args[3],
+              methodology : +args[4],
+              contribution : +args[5],
+              recommendation : accepted,
+            })
+            .then((rev) => {
+              console.log(`Updated review ${rev._id} for manuscript ${args[1]}`)
+            })
+            .catch((error) => {
+              console.log('Error updating this review');
+            });
+          }
+        })
+        .catch((error) => console.log("Error updating this review"));
     }
 
-    private resign () : boolean { // DEPLOY
+    private resign () : boolean {
         let resigned = this.resignRequested;
         if (!this.resignRequested) {
             console.log("Enter resign again to resign");
             this.resignRequested = true;
         } else {
-
+          User.findByIdAndRemove(this.user._id, (err, user) => {
+            if (err) console.error("Failed to resign:", err);
+             else if (user) {
+               console.log("Removing related reviews...");
+               Review.find({ reviewer: this.user._id }).remove()
+               .then((ret) => {
+                 console.log("Thank you for your services!");
+               })
+               .catch((error) => {
+                 console.error('Error removing related reviews');
+               });
+             }
+          });
         }
         return resigned;
     }

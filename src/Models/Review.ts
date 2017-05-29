@@ -21,11 +21,11 @@ export class IReview {
 	manuscript : Schema.Types.ObjectId;
 	reviewer : Schema.Types.ObjectId;
 	dateSent? : Date;
-	appropriateness : number;
-	clarity : number;
-	methodology : number;
-	contribution : number;
-	recommendation : boolean;
+	appropriateness? : number;
+	clarity? : number;
+	methodology? : number;
+	contribution? : number;
+	recommendation? : boolean;
 }
 
 interface IReviewModel extends IReview, Document {

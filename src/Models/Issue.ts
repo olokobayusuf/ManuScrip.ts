@@ -19,7 +19,7 @@ export class IIssue {
     year : number;
     period : number;
     published? : boolean;
-    publishedDate? : Date;
+    publishDate? : Date;
 }
 
 interface IIssueModel extends IIssue, Document {
