@@ -3,7 +3,6 @@
 *   CS 61 - 17S
 */
 
-import readline = require("readline");
 import { IUserModel, User } from "../Models/User";
 
 export abstract class UserController {

@@ -2,12 +2,18 @@
 ManuScripts is a lightweight application for science journal publications.
 
 ## Setup
-You must have Node.js installed
-
+You must have Node.js and npm installed
 ```sh
 $ npm install
-$ npm start
+$ npm start # Make sure you have installed the dependencies
 ```
+
+## Dependencies
+- `npm install mongoose --save`
+- `npm install @types/mongoose --save-dev`
+- `npm install @types/mongodb --save-dev`
+- `npm install q`
+- `npm install sprintf-js`
 
 **Note: User inputs must use single quotes when entering a multi-word arguments**
 
@@ -34,17 +40,14 @@ You will then be shown a welcome message and given the ability to use the review
 
 ## Logging In
 To login, use the `login` command with your username:
-
-```
+```sh
 $ => login kfarmer
 ```
 You will then be shown a welcome message and given the ability to use the UI that corresponds to your user type.
 
 
 ## Logging Out and Exiting
-
 To logout, use the `logout` command:
-
 ```
 $ => logout
 ```
@@ -57,7 +60,6 @@ $ => quit
 ```
 
 ### When logged in as an author:
-
 ```
 $ submit <title> <RICode> (author2) (author3) (author4)
 ```
@@ -130,10 +132,6 @@ $ reject <manu#> <appropriateness> <clarity> <methodology> <contribution>
 
 ## Performing Tasks
 See the [ManuScripts Specification](http://www.cs.dartmouth.edu/~cs61/Labs/Lab%203/).
-
-
-## Dependencies
-- Node.js
 
 ## Credits
 - [Kevin Farmer](mailto:kevin.r.farmer.18@dartmouth.edu)
