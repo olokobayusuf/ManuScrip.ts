@@ -10,7 +10,7 @@ import { IUser, User } from "../Models/User";
 import { IManuscript, Manuscript } from "../Models/Manuscript";
 import { IReview, Review } from "../Models/Review";
 
-const statuses = ['submitted', 'underreview', 'accepted', 'rejected', 'typeset', 'scheduled', 'published'];
+const statuses = ['submitted', 'underreview', 'rejected', 'accepted', 'typeset', 'scheduled', 'published'];
 
 export class Reviewer extends UserController {
 
@@ -18,12 +18,12 @@ export class Reviewer extends UserController {
 
     //region --REPL--
 
-    public evaluate (args : string[], logout : () => void) : void {
+    public evaluate (args : string[], logout) : void {
         // Evaluate
         if ((args[0] = args[0].toLowerCase()) == "status") this.status();
         else if (args[0] == "accept") this.review(true, args);
         else if (args[0] == "reject") this.review(false, args);
-        else if (args[0] == "resign") if (this.resign()) logout();
+        else if (args[0] == "resign") this.resign(logout);
         else if (args[0] == "logout") logout();
         else console.error("Unrecognized command received. Try again");
     }
@@ -35,7 +35,6 @@ export class Reviewer extends UserController {
     protected welcome () : void {
         // Print
         console.log(`Welcome reviewer ${this.user.fname} ${this.user.lname}`);
-        console.log(`ID: ${this.user._id}`);
     }
 
 
@@ -43,13 +42,15 @@ export class Reviewer extends UserController {
       // Find reviews associated with this reviewer
       Review.find({ reviewer: this.user._id }).populate('manuscript').sort({ 'manuscript.status': 1 })
       .then((result) => {
-        console.log(sprintf("%-26s %-30s %-10s %-15s %-40s", "ID", "Title", "RIcode", "Status", "Timestamp"));
+        console.log(sprintf("%-25s %-30s %-10s %-12s %-10s %-38s", "ID", "Title", "RIcode", "Status", "Reviewed?", "Timestamp"));
         for (var key in result) {
           if (result.hasOwnProperty(key)) {
+            let reviewed = result[key].recommendation !== undefined ? 'yes' : 'no';
             // Find the manuscript for each review
             Manuscript.findOne({ _id: result[key].manuscript })
             .then((manu) => {
-              console.log(sprintf("%-26s %-30s %-10s %-15s %-40s", manu._id, manu.title, manu.ricode, statuses[manu.status], manu.timestamp));
+              console.log(sprintf("%-25s %-30s %-10s %-12s %-10s %-38s",
+              manu._id, manu.title, manu.ricode, statuses[manu.status], reviewed , manu.timestamp));
             })
             .catch((error) => {
               console.error("Failed to get manuscripts:", error);
@@ -90,7 +91,7 @@ export class Reviewer extends UserController {
               recommendation : accepted,
             })
             .then((rev) => {
-              console.log(`Updated review ${rev._id} for manuscript ${args[1]}`)
+              console.log(`Updated review for manuscript ${args[1]}`)
             })
             .catch((error) => {
               console.log('Error updating this review');
@@ -100,7 +101,7 @@ export class Reviewer extends UserController {
         .catch((error) => console.log("Error updating this review"));
     }
 
-    private resign () : boolean {
+    private resign (logout) : boolean {
         let resigned = this.resignRequested;
         if (!this.resignRequested) {
             console.log("Enter resign again to resign");
@@ -113,6 +114,7 @@ export class Reviewer extends UserController {
                Review.find({ reviewer: this.user._id }).remove()
                .then((ret) => {
                  console.log("Thank you for your services!");
+                 logout();
                })
                .catch((error) => {
                  console.error('Error removing related reviews');

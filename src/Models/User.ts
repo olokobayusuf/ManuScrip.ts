@@ -8,6 +8,7 @@ import { db } from "../db"
 
 // Schema
 const UserSchema : Schema = new Schema({
+    username : { type: String, index: true },
     role : String,
     fname : String,
     lname : String,
@@ -19,6 +20,7 @@ const UserSchema : Schema = new Schema({
 
 // Functional interface
 export interface IUser {
+    username : string;
     role : string;
     fname : string;
     lname : string;

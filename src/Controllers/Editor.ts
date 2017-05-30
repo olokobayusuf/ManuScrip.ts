@@ -10,7 +10,7 @@ import { IManuscript, Manuscript } from "../Models/Manuscript";
 import { IReview, Review } from "../Models/Review";
 import { IIssue, Issue } from "../Models/Issue";
 
-const statuses = ['submitted', 'underreview', 'accepted', 'rejected', 'typeset', 'scheduled', 'published'];
+const statuses = ['submitted', 'underreview', 'rejected', 'accepted', 'typeset', 'scheduled', 'published'];
 
 export class Editor extends UserController {
 
@@ -37,7 +37,6 @@ export class Editor extends UserController {
     protected welcome () : void {
         // Print
         console.log(`Welcome editor ${this.user.fname} ${this.user.lname}`);
-        console.log(`ID: ${this.user._id}`);
     }
 
     protected status () : void {
@@ -65,12 +64,12 @@ export class Editor extends UserController {
       if (args[1] == "reviewers") {
         User.find({ role: "reviewer" })
         .then((result) => {
-          console.log(sprintf("%-26s %-15s %-15s %-15s", "ID", "Fname", "Lname", "RIcodes"));
+          console.log(sprintf("%-20s %-15s %-15s %-15s", "Username", "Fname", "Lname", "RIcodes"));
           // print results
           for (var key in result) {
             if (result.hasOwnProperty(key)) {
               var reviewer = result[key];
-              console.log(sprintf("%-26s %-15s %-15s %-15s", reviewer._id, reviewer.fname, reviewer.lname, reviewer.ricodes.toString()));
+              console.log(sprintf("%-20s %-15s %-15s %-15s", reviewer.username, reviewer.fname, reviewer.lname, reviewer.ricodes.toString()));
             }
           }
         })
@@ -105,7 +104,7 @@ export class Editor extends UserController {
           return;
         }
         // Get the reviewer's RI codes
-        User.findById(reviewer, (err, reviewer) => {
+        User.findOne({ username: reviewer }, (err, reviewer) => {
             // Error checking
             if (err) console.error("Failed to retrieve reviewer info");
             else if (reviewer == null) console.error("That reviewer does not exist");
@@ -151,7 +150,7 @@ export class Editor extends UserController {
       Review.count({ manuscript: manuscript, recommendation: {$exists: true, $ne: null}})
       .then((num) => {
         if (num >= 3) {
-          Manuscript.findOneAndUpdate({ _id: manuscript, status: 1 }, { status: 2, timestamp: new Date() }, (err, manuscript) => {
+          Manuscript.findOneAndUpdate({ _id: manuscript, status: 1 }, { status: 3, timestamp: new Date() }, (err, manuscript) => {
               if (err) console.error("Failed to accept manuscript");
               else if (manuscript == null) console.error("Manuscript must exist and be underreview to accept");
               else if (manuscript) console.log("Accepted manuscript:", manuscript.title);
@@ -171,7 +170,7 @@ export class Editor extends UserController {
           return;
         }
 
-        Manuscript.findByIdAndUpdate(manuscript, { status: 3, timestamp: new Date() }, (err, manuscript) => {
+        Manuscript.findByIdAndUpdate(manuscript, { status: 2, timestamp: new Date() }, (err, manuscript) => {
             if (err) console.error("Failed to reject manuscript:");
             else if (manuscript == null) console.log("That manuscript does not exist");
             else if (manuscript) console.log("Rejected manuscript:", manuscript.title);
@@ -186,7 +185,7 @@ export class Editor extends UserController {
         let manuscript : string = args[1];
         let pageCount : number = +args[2];
 
-        Manuscript.findOneAndUpdate({ _id: manuscript, status: 2 }, { status: 4, pageCount: pageCount, timestamp: new Date() }, (err, manuscript) => {
+        Manuscript.findOneAndUpdate({ _id: manuscript, status: 3 }, { status: 4, pageCount: pageCount, timestamp: new Date() }, (err, manuscript) => {
             if (err) console.error("Failed to typeset manuscript:");
             else if (manuscript == null) console.error("Manuscript must exist and be in accepted state");
             else if (manuscript) console.log("Typeset manuscript:", manuscript.title);
@@ -218,7 +217,7 @@ export class Editor extends UserController {
         })
     }
 
-    private schedule (manuscript : string, issue : string) : void { //TODO: check if this would cause issue to exceed 100 pages
+    private schedule (manuscript : string, issue : string) : void {
         if (manuscript == null || issue == null) {
           console.error("You must provide a manuscript and issue");
           return;
@@ -229,20 +228,15 @@ export class Editor extends UserController {
           if (result == null || result.published == true) {
             console.error("Issue must exist and not be published");
           } else {
-            Manuscript.count({ issue: issue })
-            .then((count) => {
-              let maxpages : number = 100 - count;
               Manuscript.findOneAndUpdate({ _id: manuscript, status: 4 }, {
                   status: 5,
                   timestamp: new Date(),
-                  pageCount: { $lte: maxpages },
                   issue: issue
               }, (err, manuscript) => {
-                  if (err) console.error("Failed to schedule manuscript:");
+                  if (err) console.error("Failed to schedule manuscript");
                   else if (manuscript == null) console.error("Manuscript must exist and be typeset");
                   else if (manuscript) console.log("Scheduled manuscript:", manuscript.title);
               });
-            }).catch((error) => console.error("Error scheduling the manuscript"));
           }
         }).catch((error) => console.error("Error scheduling the manuscript"));
     }
@@ -258,22 +252,29 @@ export class Editor extends UserController {
           if (result == null || result.published === true) {
             console.error("Cannot publish a non-existant or already published issue");
           } else {
-            // Publish the issue
-            Issue.findByIdAndUpdate(issue, { published: true, publishDate: Date.now() }, (err, ret) => {
+            Manuscript.count({ issue: issue })
+            .then((count) => {
+              if (count < 1) {
+                console.error('You cannot publish an issue without any manuscripts in it');
+              } else {
+                // Publish the issue
+                Issue.findByIdAndUpdate(issue, { published: true, publishDate: Date.now() }, (err, ret) => {
 
-                if (err) console.error("Failed to publish issue");
-                else if (ret == null) console.error("Issue does not exist");
-                else {
-                  console.log(`Published issue ${issue}`);
-                  // Update all its manuscripts
-                  Manuscript.update({ issue: issue }, { status: 6, timestamp: new Date()}, { multi: true })
-                  .then((ret) => {
-                    console.log("Updated associated manuscripts");
-                  }).catch((error) => {
-                    console.error("Error updating manuscripts", error);
-                  })
-                }
-            });
+                    if (err) console.error("Failed to publish issue");
+                    else if (ret == null) console.error("Issue does not exist");
+                    else {
+                      console.log(`Published issue ${issue}`);
+                      // Update all its manuscripts
+                      Manuscript.update({ issue: issue }, { status: 6, timestamp: new Date()}, { multi: true })
+                      .then((ret) => {
+                        console.log("Updated associated manuscripts");
+                      }).catch((error) => {
+                        console.error("Error updating manuscripts", error);
+                      })
+                    }
+                });
+              }
+            }).catch((error) => console.error('Error attempt to publish the iss'))
           }
         }).catch((error) => {
           console.error("Error when attempting to publish the issue");

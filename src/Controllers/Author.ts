@@ -8,7 +8,7 @@ import { UserController } from "./User";
 import { IUser } from "../Models/User";
 import { IManuscript, Manuscript } from "../Models/Manuscript";
 
-const statuses = ['submitted', 'underreview', 'accepted', 'rejected', 'typeset', 'scheduled', 'published'];
+const statuses = ['submitted', 'underreview', 'rejected', 'accepted',  'typeset', 'scheduled', 'published'];
 
 export class Author extends UserController {
 
@@ -29,7 +29,6 @@ export class Author extends UserController {
     protected welcome () : void {
         // Print
         console.log(`Welcome author ${this.user.fname} ${this.user.lname} from ${this.user.address}`);
-        console.log(`ID: ${this.user._id}`);
     }
 
 
